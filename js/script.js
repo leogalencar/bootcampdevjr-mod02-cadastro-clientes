@@ -1,6 +1,11 @@
 // Main script for index.html; this script searches for the specified CEP, gets the response from an API server and fills the form's fields with the data.
 // It also adds the customer to the customers' table
 
+
+// Masks
+$('#inputCEP').mask('99999-999');
+
+
 // Search for CEP in the ViaCEP API
 function search() {
     var CEP = document.getElementById("inputCEP").value;
