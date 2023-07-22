@@ -125,9 +125,10 @@ function showCEPInfo(response) {
     document.getElementById("inputState").value = response.uf || "";
 }
 
-// Disable number field
+// Disable number field and clear it
 function lockNumber() {
     $("#inputNumber").prop("disabled", true);
+    document.getElementById("inputNumber").value = "";
 }
 
 // Enable number field
