@@ -70,20 +70,38 @@ function addNewRow(customer) {
 
 // Save customer information
 function saveCustomer() {
-    var customer = {
-        id: customers.length + 1,
-        first_name: document.getElementById("inputFirstName").value,
-        last_name: document.getElementById("inputLastName").value,
-        cep: document.getElementById("inputCEP").value,
-        address: document.getElementById("inputAddress").value,
-        number: document.getElementById("inputNumber").value,
-        neighborhood: document.getElementById("inputNeighborhood").value,
-        city: document.getElementById("inputCity").value,
-        state: document.getElementById("inputState").value,
-    };
+    
+    // Save customer only if CEP is correct
+    if (checkCEP()) {
+        var customer = {
+            id: customers.length + 1,
+            first_name: document.getElementById("inputFirstName").value,
+            last_name: document.getElementById("inputLastName").value,
+            cep: document.getElementById("inputCEP").value,
+            address: document.getElementById("inputAddress").value,
+            number: document.getElementById("inputNumber").value,
+            neighborhood: document.getElementById("inputNeighborhood").value,
+            city: document.getElementById("inputCity").value,
+            state: document.getElementById("inputState").value,
+        };
 
-    addNewRow(customer);
-    customers.push(customer);
+        addNewRow(customer);
+        customers.push(customer);
+
+        lockNumber();
+        document.getElementById("form").reset();
+    }
+}
+
+// Check for API response, i.e. if CEP is valid
+var searchResponse;
+
+function checkCEP() {
+    if (searchResponse.status === 200 && !searchResponse.responseJSON["erro"]) {
+        return true;
+    }
+
+    return false;
 }
 
 // Search for CEP in the ViaCEP API
@@ -92,13 +110,15 @@ function search() {
 
     var url = `https://viacep.com.br/ws/${CEP}/json/`;
 
-    $.getJSON(url, (response) => {
+    searchResponse = $.getJSON(url, (response) => {
         // Check if the CEP format is correct but was not found
         if ("erro" in response) {
             showCEPInfo({});
 
             lockNumber();
             showError("Não encontrado");
+
+            return false;
         }
         // Else if the CEP format is correct and was found
         else {
@@ -106,6 +126,8 @@ function search() {
             unlockNumber();
 
             clearError();
+
+            return true;
         }
     })
         // Handle error if the CEP format is incorrect
@@ -114,6 +136,8 @@ function search() {
 
             lockNumber();
             showError("CEP Inválido");
+
+            return false;
         });
 }
 
