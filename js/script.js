@@ -2,19 +2,7 @@
 // It also adds the customer to the customers' table
 
 // Customer object
-var customers = [
-    {
-        id: 1,
-        first_name: "Leonardo",
-        last_name: "Alencar",
-        cep: "18010-050",
-        address: "Rua Leite Penteado",
-        number: "999",
-        neighborhood: "Centro",
-        city: "Sorocaba",
-        state: "SP",
-    },
-];
+var customers = [];
 
 // Masks
 $("#inputCEP").mask("99999-999");
@@ -34,6 +22,8 @@ function addNewRow(customer) {
     var table = document.getElementById("customersTable");
 
     var newRow = table.insertRow();
+
+    newRow.setAttribute("class", "align-middle");
 
     // Insert customer id
     var idNode = document.createTextNode(customer.id);
@@ -70,7 +60,6 @@ function addNewRow(customer) {
 
 // Save customer information
 function saveCustomer() {
-    
     // Save customer only if CEP is correct
     if (checkCEP()) {
         var customer = {
